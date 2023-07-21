@@ -48,52 +48,56 @@
                         <div class="card-header"><h5>Lesson {{lesson.order|add:1}}: {{lesson.title}}</h5></div>
                         <div class="card-body">{{lesson.content}}</div>
                     </div>
+
                 {% endfor %}
             </div>
-            <!-- Task: show questions and choices -->
-            <!-- <HINT> Use Bootstrap Collapse to hide exam first, more details could be found here
-            https://www.w3schools.com/bootstrap4/bootstrap_collapse.asp-->
-
-            <!--
-
-            A collapse example here:
-            <div id="exam" class="collapse">
-                Click to expand elements within the collapse div
-                </div>
-
-            -->
-
-            <!-- <HINT> If user is authenticated, show course exam with a list of question -->
-
-            <!-- <HINT> Each example will have many questions -->
-
-            <!-- <HINT> Each question will have many choices -->
-
-
-            <!-- <HINT> Create a form to collect the selected choices for all questions -->
-            <!-- <HINT> For each question choice, you may create a checkbox input like
-            <input type="check" name="choice_{{choice.id}}" id="{{choice.id}}" ...>
-            -->
-
-            <!-- A choice submission form example
-            <form id="questionform" action="point to a submit view" method="post">
-                        ... for each question in the course ...
+            <div style="display: flex; flex-direction: column; gap: 4px; margin-top: 5px;">
+                <a class="btn btn-primary col-12" href="#exam" data-toggle="collapse" role="button" aria-expanded="true"  aria-controls="collapseExample">
+                    Start Exam
+                </a>
+                <div id="exam" class="collapsee" style="gap: 3px; display: flex; flex-direction:column;">
+                    <!-- <form action="">
+                        {% for q in course.question_set.all %}
+                        <div style="border: 1px solid black; padding: 5px;">
+                            <div style="background-color: rgb(221, 221, 221); padding: 7px;">{{ q.question }}</div>
+    
+                            <fieldset style="padding: 10px;">
+                            {% for c in q.choice_set.all %}
+                            <div>                            
+                                <label>
+                                    <input type="checkbox" value="{{c.id}}" name="choice_{{c.id}}">
+                                    {{c.text}}
+                                </label>
+                            </div>
+                            {% endfor %}
+    
+                            </fieldset>
+                        </div>
+                        {% endfor %}
+    
+                    </form> -->
+                    <form id="questionform" action="/onlinecourse/{{ course.id }}/submit/" method="post">
+                        {% for q in course.question_set.all %}
                         <div class="card mt-1">
-                            <div class="card-header"><h5>{{ question.question_text}}</h5></div>
+                            <div class="card-header"><h5>{{ q.question }}</h5></div>
                             {% csrf_token %}
                             <div class="form-group">
-                               ... for each choice in the question ...
-                                <div class="form-check">
-                                    <label class="form-check-label">
-                                        <input type="checkbox" name="choice_{{choice.id}}"
-                                               class="form-check-input" id="{{choice.id}}"
-                                               value="{{choice.id}}">{{ choice.choice_text }}
-                                    </label>
-                                </div>
+                            {% for c in q.choice_set.all %}
+                            <div class="form-check" style="margin-left: 10px; margin-top: 3px;">
+                                <label class="form-check-label">
+                                    <input type="checkbox" name="choice_{{c.id}}"
+                                           class="form-check-input" id="{{c.id}}"
+                                           value="{{c.id}}">{{ c.text }}
+                                </label>
+                            </div>
+                            {% endfor %}
                             </div>
                         </div>
-                    <input class="btn btn-success btn-block" type="submit" value="Submit">
-            </form> -->
+                        {% endfor %}
+                        <input class="btn btn-success btn-block" type="submit" value="Submit">
+                    </form>
+                </div>
+            </div>
 
             <!--Check here to see more details Bootstrap checkbox
              https://www.w3schools.com/bootstrap4/bootstrap_forms_inputs.asp-->
